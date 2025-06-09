@@ -1,20 +1,4 @@
-import { useState } from 'react';
-
-export default function Home() {
-  const [code, setCode] = useState('');
-  const [authenticated, setAuthenticated] = useState(false);
-  const [error, setError] = useState('');
-
-  const handleLogin = () => {
-    if (code === 'Myboyemulater') {
-      setAuthenticated(true);
-      setError('');
-    } else {
-      setError('Invalid code. Try again.');
-    }
-  };
-
-  import { useState } from 'react';
+    import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
@@ -28,7 +12,6 @@ export default function Home() {
   const [code, setCode] = useState('');
   const [authenticated, setAuthenticated] = useState(false);
   const [error, setError] = useState('');
-
   const [servers, setServers] = useState(sampleServers);
 
   const handleLogin = () => {
@@ -42,7 +25,7 @@ export default function Home() {
 
   const toggleStatus = (id) => {
     setServers(
-      servers.map(server =>
+      servers.map((server) =>
         server.id === id
           ? { ...server, status: server.status === 'Online' ? 'Offline' : 'Online' }
           : server
@@ -128,27 +111,4 @@ export default function Home() {
       </div>
     </div>
   );
-    }
-
-  return (
-    <div className="flex items-center justify-center h-screen bg-black text-white">
-      <div className="bg-gray-900 p-8 rounded-2xl shadow-2xl w-80 space-y-4">
-        <h2 className="text-xl text-green-400 font-semibold">Enter VIP Access Code</h2>
-        <input
-          className="w-full p-2 rounded bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500"
-          type="password"
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-          placeholder="Access Code"
-        />
-        <button
-          onClick={handleLogin}
-          className="w-full bg-green-500 text-black py-2 rounded font-bold hover:bg-green-400"
-        >
-          Unlock
-        </button>
-        {error && <p className="text-red-400 text-sm">{error}</p>}
-      </div>
-    </div>
-  );
-        }
+                  }
