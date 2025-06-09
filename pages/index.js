@@ -6,9 +6,7 @@ export default function Home() { const [servers, setServers] = useState(sampleSe
 
 const toggleStatus = (id) => { setServers(servers.map(server => server.id === id ? { ...server, status: server.status === 'Online' ? 'Offline' : 'Online' } : server )); };
 
-const createBackup = (id) => { alert(Backup created for server ${id}); };
-
-const restoreBackup = (id) => { alert(Backup restored for server ${id}); };
+const createBackup = (id) => { alert(`Backup created for server ${id}`); };const restoreBackup = (id) => { alert(`Backup restored for server ${id}`); };
 
 const addServer = () => { const newServer = { id: Date.now(), name: New Server ${servers.length + 1}, status: 'Offline', }; setServers([...servers, newServer]); };
 
