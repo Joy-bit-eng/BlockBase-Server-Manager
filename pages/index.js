@@ -24,21 +24,34 @@ export default function Home() {
     localStorage.setItem('servers', JSON.stringify(updatedServers));
   };
 
-  const toggleStatus = (id) => {
-    const server = servers.find(s => s.id === id);
-    if (!server.ip || !server.port) {
-      alert("Please enter a valid IP and Port before starting the server.");
-      return;
-    }
+  const toggleStatus = async (id) => {
+  const server = servers.find(s => s.id === id);
+  if (!server.ip || !server.port) {
+    alert("Please enter a valid IP and Port before starting the server.");
+    return;
+  }
 
-    const updatedServers = servers.map(server =>
-      server.id === id
-        ? { ...server, status: server.status === 'Online' ? 'Offline' : 'Online' }
-        : server
-    );
-    setServers(updatedServers);
-    saveServers(updatedServers);
-  };
+  try {
+    const endpoint = server.status === 'Online' ? '/stop' : '/start';
+    const response = await fetch(`http://localhost:5000${endpoint}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, ip: server.ip, port: server.port })
+    });
+
+    const message = await response.text();
+    alert(message);
+  } catch (err) {
+    console.error('Error toggling server:', err);
+    alert('Failed to communicate with backend.');
+  }
+
+  const updatedServers = servers.map(s =>
+    s.id === id ? { ...s, status: s.status === 'Online' ? 'Offline' : 'Online' } : s
+  );
+  setServers(updatedServers);
+  saveServers(updatedServers);
+};
 
   const createBackup = (id) => {
     alert(`Backup created for server ${id}`);
