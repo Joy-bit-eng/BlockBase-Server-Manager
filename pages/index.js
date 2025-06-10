@@ -11,7 +11,6 @@ const sampleServers = [
 export default function Home() {
   const [servers, setServers] = useState([]);
 
-  // Load servers from localStorage if available
   useEffect(() => {
     const savedServers = JSON.parse(localStorage.getItem('servers'));
     if (savedServers) {
@@ -21,26 +20,25 @@ export default function Home() {
     }
   }, []);
 
-  // Save servers to localStorage
   const saveServers = (updatedServers) => {
     localStorage.setItem('servers', JSON.stringify(updatedServers));
   };
 
   const toggleStatus = (id) => {
-  const server = servers.find(s => s.id === id);
-  if (!server.ip || !server.port) {
-    alert("Please enter a valid IP and Port before starting the server.");
-    return;
-  }
+    const server = servers.find(s => s.id === id);
+    if (!server.ip || !server.port) {
+      alert("Please enter a valid IP and Port before starting the server.");
+      return;
+    }
 
-  const updatedServers = servers.map(server =>
-    server.id === id
-      ? { ...server, status: server.status === 'Online' ? 'Offline' : 'Online' }
-      : server
-  );
-  setServers(updatedServers);
-  saveServers(updatedServers);
-};
+    const updatedServers = servers.map(server =>
+      server.id === id
+        ? { ...server, status: server.status === 'Online' ? 'Offline' : 'Online' }
+        : server
+    );
+    setServers(updatedServers);
+    saveServers(updatedServers);
+  };
 
   const createBackup = (id) => {
     alert(`Backup created for server ${id}`);
@@ -81,13 +79,18 @@ export default function Home() {
     <div className="min-h-screen bg-black text-white p-6">
       <h1 className="text-4xl font-bold mb-6">BlockBase Control Panel</h1>
       <Button onClick={addServer} className="mb-6 bg-green-700">Add New Server</Button>
-      <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         {servers.map(server => (
           <Card key={server.id} className="bg-gray-900 text-white">
             <CardContent className="p-4 space-y-3">
               <div className="flex items-center gap-3">
                 <Image src="/server-icon.png" alt="Server Icon" width={32} height={32} />
-                <h2 className="text-xl font-semibold">{server.name}</h2>
+                <input
+                  type="text"
+                  value={server.name}
+                  onChange={(e) => handleInputChange(server.id, 'name', e.target.value)}
+                  className="bg-gray-800 text-white rounded p-1 w-full"
+                />
               </div>
               <p>Status: <span className={server.status === 'Online' ? 'text-green-400' : 'text-red-400'}>{server.status}</span></p>
               <div>
@@ -110,7 +113,7 @@ export default function Home() {
                   placeholder="Enter Port"
                 />
               </div>
-              <div className="flex gap-2 mt-3">
+              <div className="flex flex-wrap gap-2 mt-3">
                 <Button onClick={() => toggleStatus(server.id)} className="bg-blue-700">
                   {server.status === 'Online' ? 'Stop' : 'Start'}
                 </Button>
@@ -124,4 +127,4 @@ export default function Home() {
       </div>
     </div>
   );
-}
+  }
