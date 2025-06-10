@@ -27,12 +27,20 @@ export default function Home() {
   };
 
   const toggleStatus = (id) => {
-    const updatedServers = servers.map(server => 
-      server.id === id ? { ...server, status: server.status === 'Online' ? 'Offline' : 'Online' } : server
-    );
-    setServers(updatedServers);
-    saveServers(updatedServers);
-  };
+  const server = servers.find(s => s.id === id);
+  if (!server.ip || !server.port) {
+    alert("Please enter a valid IP and Port before starting the server.");
+    return;
+  }
+
+  const updatedServers = servers.map(server =>
+    server.id === id
+      ? { ...server, status: server.status === 'Online' ? 'Offline' : 'Online' }
+      : server
+  );
+  setServers(updatedServers);
+  saveServers(updatedServers);
+};
 
   const createBackup = (id) => {
     alert(`Backup created for server ${id}`);
