@@ -1,64 +1,29 @@
 const express = require('express');
 const cors = require('cors');
-const fs = require('fs');
 const { exec } = require('child_process');
-const path = require('path');
-
 const app = express();
 const PORT = 3001;
 
 app.use(cors());
 app.use(express.json());
 
-const SERVERS_DIR = path.join(__dirname, 'servers');
-if (!fs.existsSync(SERVERS_DIR)) {
-  fs.mkdirSync(SERVERS_DIR);
-}
-
-const getServerPath = (id) => path.join(SERVERS_DIR, `server-${id}`);
-
-app.post('/start/:id', (req, res) => {
-  const id = req.params.id;
-  const serverPath = getServerPath(id);
-  if (!fs.existsSync(serverPath)) {
-    return res.status(404).json({ error: 'Server not found' });
-  }
-
-  const startCommand = `cd ${serverPath} && LD_LIBRARY_PATH=. ./bedrock_server`;
-  const child = exec(startCommand, (err) => {
-    if (err) console.error(err);
-  });
-
-  res.json({ message: `Server ${id} starting...` });
-});
-
-app.post('/stop/:id', (req, res) => {
-  // In production, use better process management
-  res.json({ message: `Stop server not implemented directly.` });
-});
-
-app.post('/backup/:id', (req, res) => {
-  const id = req.params.id;
-  const serverPath = getServerPath(id);
-  const backupPath = path.join(serverPath, `backup-${Date.now()}.zip`);
-
-  if (!fs.existsSync(serverPath)) {
-    return res.status(404).json({ error: 'Server not found' });
-  }
-
-  exec(`zip -r ${backupPath} ${serverPath}`, (err) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ error: 'Backup failed' });
+// Start a Minecraft Bedrock server
+app.post('/start', (req, res) => {
+  const { ip, port } = req.body;
+  // replace this with your own script logic
+  exec(`bedrock_server`, (error, stdout, stderr) => {
+    if (error) {
+      return res.status(500).send(`Error: ${stderr}`);
     }
-    res.json({ message: 'Backup created', path: backupPath });
+    res.send(`Server started:\n${stdout}`);
   });
 });
 
-app.post('/restore/:id', (req, res) => {
-  res.json({ message: 'Restore not implemented yet' });
+// Stop server (your own logic here)
+app.post('/stop', (req, res) => {
+  res.send('Stop command triggered. Add your logic here.');
 });
 
 app.listen(PORT, () => {
-  console.log(`BlockBase backend API running at http://localhost:${PORT}`);
+  console.log(`BlockBase backend running at http://localhost:${PORT}`);
 });
