@@ -1,5 +1,15 @@
 {
-  "name": "BlockBase Dev Container",
-  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
-  "postCreateCommand": "apt-get update && apt-get install -y curl unzip iputils-ping dnsutils"
+  "name": "BlockBase Dev",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
+  "features": {},
+  "postCreateCommand": "npm install && node minecraft-server/download_bedrock_server.js",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode"
+      ]
+    }
+  },
+  "workspaceFolder": "/workspaces/BlockBase-Server-Manager"
 }
