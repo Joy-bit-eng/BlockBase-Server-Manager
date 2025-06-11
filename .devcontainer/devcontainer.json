@@ -1,0 +1,5 @@
+{
+  "name": "BlockBase Dev Container",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "postCreateCommand": "apt-get update && apt-get install -y iputils-ping dnsutils curl unzip"
+}
