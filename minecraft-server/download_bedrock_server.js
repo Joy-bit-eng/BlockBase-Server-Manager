@@ -1,31 +1,28 @@
+// download_bedrock_server.js
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
 
-const output = path.join(__dirname, 'bedrock-server.zip');
+const downloadURL = 'https://minecraft.azureedge.net/bin-linux/bedrock-server-1.20.80.02.zip'; // ✅ Latest as of June 2025
+const outputPath = path.join(__dirname, 'bedrock-server.zip');
 
-function download(url, dest) {
-  const file = fs.createWriteStream(dest);
-  https.get(url, (response) => {
-    if (response.statusCode === 302 || response.statusCode === 301) {
-      // Follow redirect
-      download(response.headers.location, dest);
-    } else if (response.statusCode === 200) {
-      response.pipe(file);
-      file.on('finish', () => {
-        file.close();
-        console.log(`Downloaded to ${dest}`);
-      });
-    } else {
-      console.error(`Request failed with status code: ${response.statusCode}`);
-    }
-  }).on('error', (err) => {
-    fs.unlink(dest, () => {});
-    console.error(`Error: ${err.message}`);
+console.log('⬇️ Downloading Minecraft Bedrock Server from: ' + downloadURL);
+
+https.get(downloadURL, (res) => {
+  if (res.statusCode !== 200) {
+    console.error(`❌ Download failed. Status Code: ${res.statusCode}`);
+    return;
+  }
+
+  const file = fs.createWriteStream(outputPath);
+  res.pipe(file);
+
+  file.on('finish', () => {
+    file.close();
+    console.log(`✅ Download complete: ${outputPath}`);
+    console.log('📦 You can now unzip the file using:');
+    console.log(`    unzip ${outputPath} -d ./server`);
   });
-}
-
-download(
-  'https://minecraft.azureedge.net/bin-linux/bedrock-server-1.20.81.01.zip',
-  output
-);
+}).on('error', (err) => {
+  console.error(`❌ Error: ${err.message}`);
+});
