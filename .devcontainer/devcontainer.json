@@ -1,15 +1,9 @@
 {
-  "name": "BlockBase Dev",
-  "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
-  "features": {},
-  "postCreateCommand": "npm install && node minecraft-server/download_bedrock_server.js",
-  "customizations": {
-    "vscode": {
-      "extensions": [
-        "dbaeumer.vscode-eslint",
-        "esbenp.prettier-vscode"
-      ]
-    }
+  "name": "BlockBase Server Dev",
+  "build": {
+    "dockerfile": "Dockerfile"
   },
-  "workspaceFolder": "/workspaces/BlockBase-Server-Manager"
+  "runArgs": ["--network=host"],
+  "mounts": ["source=${localWorkspaceFolder}/minecraft-server,target=/workspace/minecraft-server,type=bind"],
+  "postCreateCommand": "bash .devcontainer/setup.sh"
 }
